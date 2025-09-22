@@ -27,13 +27,10 @@ const Welcome = () => {
                             <div className="absolute top-2 border-emerald-300 border left-1/2 w-20 h-px bg-gray-400 transform -translate-y-2 rotate-45 origin-left" />
                         </div>
 
-                        {/* Two Child Nodes */}
-                        <div className="grid grid-cols-2 sm:gap-20 gap-4 ">
-                            {/* Breeder */}
+                        <div className="flex sm:gap-20 gap-4 ">
                             <WelcomeChoice to={paths.login} choice="Breeder" icon={<FcBusinessman />
-                            } className="shadow-inner shadow-black" choicedesc="connect with potential pet owners" />
+                            } className="shadow-inner shadow-black" choicedesc="connect with potential pet owners in your vicinity" />
 
-                            {/* User */}
                             <WelcomeChoice className="bg-emerald-500 text-white shadow-inner shadow-emerald-800" icon={<FcHome />} to={paths.login} choice="User" choicedesc="Friendly Pet Ecosystem, connect with pet owners" />
 
                         </div>
