@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import AppButton from "./AppButton"
+import AppButton from "./ui/AppButton"
 import { Link } from "react-router-dom";
 
 

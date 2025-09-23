@@ -3,6 +3,7 @@ export default {
     index: "/index",
     login: "/login",
     register: "/register",
+    forgotPassword: "/forgot-password",
     user: {
         dashboard: "/user/dashboard",
     }

@@ -10,11 +10,12 @@ const Welcome = () => {
         <Guest>
             <section>
                 <div className="flex flex-col justify-center items-center -mt-7">
-                    <h1 className="text-center  p-4 pb-2">
+                    <h1 className="text-center  p-4 pb-0">
                         <strong className="text-xl">Welcome to Hibreeder</strong> <br /> Your ultimate platform for pet management.
                     </h1>
                 </div>
 
+                        <div className="text-center mt-5"><p className="text-2xl font-medium">Select Role </p></div>
                 <div className="flex items-center justify-center p-4 pt-0">
                     <div className="w-full max-w-4xl relative">
                         {/* Junction node */}
@@ -26,7 +27,6 @@ const Welcome = () => {
                             {/* Right diagonal */}
                             <div className="absolute top-2 border-emerald-300 border left-1/2 w-20 h-px bg-gray-400 transform -translate-y-2 rotate-45 origin-left" />
                         </div>
-
                         <div className="flex sm:gap-20 gap-4 ">
                             <WelcomeChoice to={paths.login} choice="Breeder" icon={<FcBusinessman />
                             } className="shadow-inner shadow-black" choicedesc="connect with potential pet owners in your vicinity" />

@@ -27,7 +27,7 @@ const AppButton = ({ className, text, onClick, variant = 'default', disabled = f
     };
 
     return (
-        <button
+        <button type="button"
             onClick={disabled ? undefined : onClick}
             disabled={disabled}
             className={`${getVariantClasses(variant)} ${className || ''}`}

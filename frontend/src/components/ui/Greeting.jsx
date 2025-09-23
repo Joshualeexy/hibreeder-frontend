@@ -1,11 +1,9 @@
 // {october 21st, i just noticed a future scaling issue please fix component from requuesting every second .. server might fry}
 
-import { usePage } from "@inertiajs/react";
 import { useState } from "react";
 import Heading from "@/Components/Heading";
 
 const Greeting = () => {
-    const user = usePage().props.auth.user;
     const [date, setDate] = useState("");
 
     const formatDate = () => {
