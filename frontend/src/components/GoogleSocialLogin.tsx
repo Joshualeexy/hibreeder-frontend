@@ -6,12 +6,11 @@ const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 type GoogleLoginButtonProps = {
     text?: string;
 };
+const redirectUri = window.location.href;
 
 const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ text = "Login with Google" }) => {
     const Glogin = async (): Promise<void> => {
-        const redirectUri = window.location.origin;
         const nonce = Math.random().toString(36).substring(2);
-
         const authUrl =
             `https://accounts.google.com/o/oauth2/v2/auth?` +
             `client_id=${clientId}&` +

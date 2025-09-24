@@ -26,7 +26,7 @@ const ForgotPassword = () => {
         </div>
 
         <div className="flex justify-end items-center w-full">
-          <Link to={paths.login} className="text-sm text-gray-600 hover:underline flex justify-center items-center "> <TbArrowBack /> Login</Link>
+          <Link to={paths.login} className="text-sm text-gray-600 underline flex justify-center items-center "> <TbArrowBack /> Login</Link>
         </div>
       </form>
 

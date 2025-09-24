@@ -9,38 +9,32 @@ import GoogleSocialLogin from "../../components/GoogleSocialLogin"
 const Register = () => {
   return (
     <Guest>
-      <form className="mx-auto sm:w-4/12 w-11/12  p-4 pt-0 space-y-3">
+      <form className="mx-auto sm:w-4/12 w-11/12  p-4 pt-0 space-y-3 ">
         <FloatLeft />
 
-        <div className="">
-          <h4 className="text-center font-bold text-xl">Register HiBreeder</h4>
-        </div>
-        <div className="">
-          <AppInput placeholder="Enter Full Name" label="Full Name" />
+        <h4 className="text-center font-bold text-xl">Register HiBreeder</h4>
+
+        <AppInput placeholder="Enter Full Name" label="Full Name" />
+
+        <AppInput placeholder="Enter Email" label="Email" type="email" />
+
+        <AppInput placeholder="Enter Password" label="Password" type="password" />
+
+        <AppInput placeholder="Confirm Password" label="Confirm Password" type="password" />
+
+        <div className="text-center text-[10px] sm:text-sm">
+          I have read and agreed to HiBreeder <Link to={paths.terms} className="underline">User Agreement</Link> and
+          <p className="flex items-center justify-center gap-2">
+            <Link to={paths.policy} className="underline">privacy policy </Link>
+            <input type="checkbox" className="accent-emerald-500 mt-1" /> </p>
         </div>
 
-        <div className="">
-          <AppInput placeholder="Enter Email" label="Email" type="email" />
-        </div>
-
-        <div className="">
-          <AppInput placeholder="Enter Password" label="Password" type="password" />
-        </div>
-
-        <div className="">
-          <AppInput placeholder="Confirm Password" label="Confirm Password" type="password" />
-        </div>
-
-        <div className="text-center w-full">
-          <AppButton text="Register" variant="success" className="px-8 w-full rounded-md " />
-        </div>
-        <div className="text-center w-full mb-8">
-          <GoogleSocialLogin text="Continue with Google"/>      
-            </div>
+        <AppButton text="Register" variant="success" className="px-8 w-full rounded-md border-2" />
+        <GoogleSocialLogin text="Continue with Google" />
 
         <div className="flex justify-between items-center w-full">
-          <Link to={paths.forgotPassword} className="text-sm text-gray-600 hover:underline">Forgot password?</Link>
-          <Link to={paths.login} className="text-sm text-gray-600 hover:underline">Login account</Link>
+          <Link to={paths.forgotPassword} className="text-sm text-gray-600 underline">Forgot password?</Link>
+          <Link to={paths.login} className="text-sm text-gray-600 underline">Login account</Link>
         </div>
       </form>
 

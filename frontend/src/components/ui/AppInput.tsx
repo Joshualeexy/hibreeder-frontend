@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
+import { twMerge } from "tailwind-merge";
 
 type props = {
   className?: string,
@@ -25,10 +26,9 @@ export default function AppInput({ className, error, label, showLabel = true, ty
         {showLabel && <div className='mb-1 text-sm font-medium text-gray-600'><label > {label} </label></div>}
         <input
           type={chosenType}
-          className={`border-emerald-500 placeholder:text-sm sm:text-lg text-[1rem] focus:ring-emerald-500 rounded-md shadow-sm w-full p-2 pr-10 border focus:outline-none focus:ring-2 ${className} `
+          className={twMerge(`border-emerald-500 placeholder:text-sm sm:text-lg text-[1rem] focus:ring-emerald-500 rounded-md shadow-sm w-full p-2 pr-10 border focus:outline-none focus:ring-2`,className)
           }
           {...rest}
-
         />
         {isPassword && (
           <span
