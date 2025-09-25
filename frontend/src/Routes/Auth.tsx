@@ -3,6 +3,7 @@ import paths from "./paths";
 import Login from "../Pages/Auth/Login";
 import Register from "../Pages/Auth/Register";
 import ForgotPassword from '../Pages/Auth/ForgotPassword';
+import Verify from "../Pages/Auth/Verify";
 
 export default [
     {
@@ -16,5 +17,9 @@ export default [
     {
         path: paths.forgotPassword,
         element: <ForgotPassword />
+    },
+    {
+        path: paths.verify,
+        element: <Verify/>
     }
 ] as RouteObject[];

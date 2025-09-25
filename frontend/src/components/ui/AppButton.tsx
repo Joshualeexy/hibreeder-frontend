@@ -1,3 +1,5 @@
+import { twMerge } from "tailwind-merge";
+
 type ButtonVariant = 'default' | 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'outline';
 
 type Props = {
@@ -6,9 +8,10 @@ type Props = {
     className?: string;
     variant?: ButtonVariant;
     disabled?: boolean;
+    isLoading?:boolean
 }
 
-const AppButton = ({ className, text, onClick, variant = 'default', disabled = false }: Props) => {
+const AppButton = ({isLoading=false, className, text, onClick, variant = 'default', disabled = false }: Props) => {
     const getVariantClasses = (variant: ButtonVariant): string => {
         const baseClasses = 'inline-block px-4 py-2 rounded-full text-sm font-semibold transition-colors duration-200 active:opacity-50';
         const variants = {
@@ -30,9 +33,9 @@ const AppButton = ({ className, text, onClick, variant = 'default', disabled = f
         <button 
             onClick={disabled ? undefined : onClick}
             disabled={disabled}
-            className={`${getVariantClasses(variant)} ${className || ''}`}
+            className={twMerge(`${getVariantClasses(variant)}`,className)}
         >
-            {text}
+          {isLoading ? <div className="mx-auto w-5 h-5 rounded-full border border-t-0 animate-spin"></div> : text}   
         </button>
     );
 }

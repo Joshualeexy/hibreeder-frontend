@@ -5,13 +5,16 @@ import { Link } from "react-router-dom"
 import paths from "../../Routes/paths"
 import GoogleSocialLogin from "../../components/GoogleSocialLogin"
 import FloatLeft from "../../components/ui/FloatLeft"
-import { validate } from "../../utility/validator"
+import validate from "../../utility/validator"
 import { useState } from "react"
+import AppForm from "../../components/ui/AppForm";
+
 
 type Data = {
   email: string
   password: string
 }
+  const appName = import.meta.env.VITE_APP_NAME || ""
 
 const Login = () => {
   const [data, setData] = useState<Data>({
@@ -19,31 +22,43 @@ const Login = () => {
     password: ""
   })
 
-  const [error, setError] = useState<{ [key: string]: string }>({})
+  const [isLoading, setIsLoading] = useState(false)
+
+  const [errors, setErrors] = useState<{ [key: string]: string }>({})
 
   const handleOnChange = (res: string, field: string): void => {
     setData((data) => ({ ...data, [field]: res }))
   }
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>): Promise<boolean> => {
     e.preventDefault()
-    // alert(data.email)
+    setErrors((prev) => ({ ...prev, email: validate(data.email, { type: "email", required: true }) }))
+    setErrors((prev) => ({ ...prev, password: validate(data.password, { type: 'password', min: 6 }) }))
+
+     if (Object.keys(errors).length > 0) {
+      setIsLoading(false);
+      return false
+    }
+
+    
+
+    return true
   }
 
   return (
-    <Guest>
-      <form onSubmit={(e) => { handleLogin(e) }} className=" mx-auto sm:w-4/12 w-11/12  p-4 space-y-3 mb-20 pt-0">
+    <Guest title="Login">
+      <AppForm onSubmit={(e) => { handleLogin(e) }} >
 
         <FloatLeft />
 
-        <h4 className="text-center font-medium text-xl">Login HiBreeder</h4>
+        <h4 className="text-center font-medium text-xl">Login {appName}</h4>
 
-        <AppInput handleOnChange={handleOnChange} field="email" placeholder="Enter Email" type="email" label="Email"
+        <AppInput error={errors.email} handleOnChange={handleOnChange} field="email" placeholder="Enter Email" type="email" label="Email"
         />
 
-        <AppInput handleOnChange={handleOnChange} field="password" placeholder="Enter Password" type="password" label="Password" />
+        <AppInput error={errors.password} handleOnChange={handleOnChange} field="password" placeholder="Enter Password" type="password" label="Password" />
 
-        <AppButton text="Login" variant="success" className="px-8  w-full rounded-md " />
+        <AppButton text="Login" isLoading={isLoading} variant="success" className="px-8  w-full rounded-md " />
 
         <GoogleSocialLogin />
 
@@ -51,7 +66,7 @@ const Login = () => {
           <Link to={paths.forgotPassword} className="text-sm text-gray-600 underline">Forgot password?</Link>
           <Link to={paths.register} className="text-sm text-gray-600 underline">Create Account</Link>
         </div>
-      </form>
+      </AppForm>
 
     </Guest>
   )

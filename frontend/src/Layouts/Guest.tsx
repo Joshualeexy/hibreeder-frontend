@@ -1,15 +1,21 @@
 import type { ReactElement } from "react"
 import ApplicationLogo from "../components/ui/ApplicationLogo"
+import { useEffect } from "react"
 
 
 
 type props = {
     children: ReactElement,
+    title?: string
 }
 
-const Guest = ({ children }: props) => {
+const Guest = ({ children,title }: props) => {
+
+    useEffect(() => {
+        document.title = `${title ? title : "Page"} | MyApp`;
+    }, []);
     return (
-        <section className="min-h-dvh bg-gray-100 flex justify-center items-center flex-col w-screen">
+        <section className="min-h-dvh bg-gray-50 flex justify-center items-center flex-col w-screen">
             <header className="p-4 flex justify-center items-center w-full  ">
                 <nav className=" sm:w-4/12 w-10/12  pt-5">
                     <div className="text-center">

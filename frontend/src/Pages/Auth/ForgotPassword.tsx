@@ -1,23 +1,39 @@
 import AppButton from "../../components/ui/AppButton"
 import AppInput from "../../components/ui/AppInput"
 import Guest from "../../Layouts/Guest"
-import { Link } from "react-router-dom"
-import { TbArrowBack } from "react-icons/tb";
 import paths from "../../Routes/paths";
 import FloatLeft from "../../components/ui/FloatLeft";
+import { useState } from "react";
+import validate from "../../utility/validator";
+import AppForm from "../../components/ui/AppForm";
+import BackButton from "../../components/ui/BackButton";
+
 
 const ForgotPassword = () => {
+  const [email, setEmail] = useState("")
+  const [errors, setErrors] = useState<{ [key: string]: string }>({})
+
+  const handleOnChange = (value: string) => {
+    setEmail(value)
+  }
+
+  const handleResetPassword = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setErrors((prev) => ({ ...prev, email: validate(email, { type: "email", required: true }) }))
+  }
+
   return (
-    <Guest>
-      <form className="mx-auto sm:w-4/12 w-11/12  p-4 pt-0 space-y-4 mb-10">
-            <FloatLeft/>
+    <Guest title="Forgot Password">
+      <AppForm onSubmit={handleResetPassword} >
+      
+        <FloatLeft />
 
         <div className="">
           <h4 className="text-center font-bold text-xl">Forgotten Password</h4>
         </div>
 
         <div className="">
-          <AppInput  placeholder="Enter Email" label="Email" type="email" />
+          <AppInput value={email} handleOnChange={handleOnChange} error={errors.email} field="email" placeholder="Enter Email" label="Email" type="email" />
         </div>
 
 
@@ -26,9 +42,9 @@ const ForgotPassword = () => {
         </div>
 
         <div className="flex justify-end items-center w-full">
-          <Link to={paths.login} className="text-sm text-gray-600 underline flex justify-center items-center "> <TbArrowBack /> Login</Link>
+          <BackButton text="back to login" to={paths.login}/>
         </div>
-      </form>
+      </AppForm>
 
     </Guest>
   )

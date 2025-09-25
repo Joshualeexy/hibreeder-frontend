@@ -7,17 +7,10 @@ type ValidationOptions = {
     // Removed [key: string]: any; - causes type conflicts
 };
 
-type ValidationResult = {
-    valid: boolean;
-    errors: Record<string, string>;
-};
-
-export function validate(
-    fieldName: string,
+export default function validate(
     value: string,
     options: ValidationOptions
-): ValidationResult {
-    const errs: Record<string, string> = {};
+): string {
     const opts = {
         min: 1,
         max: 255,
@@ -28,47 +21,41 @@ export function validate(
 
     // Required check
     if (opts.required && (!value || value.trim() === "")) {
-        errs[fieldName] = "This field is required";
-        return { valid: false, errors: errs };
-    }
-
-    // Skip validation for non-required empty fields
-    if (!opts.required && (!value || value.trim() === "")) {
-        return { valid: true, errors: {} };
+        return "This field is required";
     }
 
     switch (opts.type) {
         case "email":
             // Better email regex that's more accurate
             if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-                errs[fieldName] = "Please enter a valid email address";
+                return "Please enter a valid email address";
             }
             break;
 
         case "number":
             // Fixed: Handle edge cases for number validation
             const trimmedValue = value.trim();
-            
+
             // Check for empty string after trimming
             if (trimmedValue === "") {
-                errs[fieldName] = "Please enter a valid number";
+                return "Please enter a valid number";
             }
             // Fixed regex: was allowing invalid formats like "." or "-"
             else if (!/^-?\d+(\.\d+)?$/.test(trimmedValue)) {
-                errs[fieldName] = "Please enter a valid number";
+                return "Please enter a valid number";
             }
             // Check if it's a valid finite number
             else if (!isFinite(Number(trimmedValue))) {
-                errs[fieldName] = "Please enter a valid number";
+                return "Please enter a valid number";
             }
             break;
 
         case "password":
             // Length validation
             if (value.length < opts.min) {
-                errs[fieldName] = `Password must be at least ${opts.min} characters`;
+                return `Password must be at least ${opts.min} characters`;
             } else if (value.length > opts.max) {
-                errs[fieldName] = `Password must be at most ${opts.max} characters`;
+                return `Password must be at most ${opts.max} characters`;
             } else if (opts.difficulty === "strict") {
                 // Check all strict requirements and collect all errors
                 const strictErrors: string[] = [];
@@ -90,7 +77,7 @@ export function validate(
                 }
 
                 if (strictErrors.length > 0) {
-                    errs[fieldName] = `Password must ${strictErrors.join(", ")}`;
+                    return `Password must ${strictErrors.join(", ")}`;
                 }
             }
             break;
@@ -98,12 +85,12 @@ export function validate(
         case "text":
         default:
             if (value.length < opts.min) {
-                errs[fieldName] = `This field must be at least ${opts.min} characters`;
+                return `This field must be at least ${opts.min} characters`;
             } else if (value.length > opts.max) {
-                errs[fieldName] = `This field must be at most ${opts.max} characters`;
+                return `This field must be at most ${opts.max} characters`;
             }
             break;
     }
+    return ""
 
-    return { valid: Object.keys(errs).length === 0, errors: errs };
 }
