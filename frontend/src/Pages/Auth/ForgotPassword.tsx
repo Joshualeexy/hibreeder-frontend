@@ -17,7 +17,7 @@ const ForgotPassword = () => {
         </div>
 
         <div className="">
-          <AppInput placeholder="Enter Email" label="Email" type="email" />
+          <AppInput  placeholder="Enter Email" label="Email" type="email" />
         </div>
 
 
