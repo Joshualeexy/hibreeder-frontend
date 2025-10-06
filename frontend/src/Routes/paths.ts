@@ -8,7 +8,7 @@ export default {
     terms: "/terms-of-service",
     forgotPassword: "/forgot-password",
     user: {
-        dashboard: "/user/dashboard",
+        feeds: "/feeds",
     }
 
 }

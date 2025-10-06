@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import WelcomeChoice from "../components/WelcomeChoice";
 import Guest from "../Layouts/Guest"
 import paths from "../Routes/paths";
@@ -7,6 +8,10 @@ import { FcHome } from "react-icons/fc";
   const appName = import.meta.env.VITE_APP_NAME || ""
 
 const Welcome = () => {
+
+    useEffect(()=>{
+        document.title = `Home Page | ${appName}`
+    })
     return (
         <Guest>
             <section>

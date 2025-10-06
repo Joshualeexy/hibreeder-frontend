@@ -24,7 +24,8 @@ const Verify = () => {
                 </div>
 
                 <div className="text-center w-full mb-4 ">
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit, reiciendis quidem! </p>        </div>
+                    <p>Great! Your email has been validated.
+Click "Verify Email" to unlock full access to your Breeder account. </p>        </div>
                 <div className="text-center w-full mb-4 ">
                     <AppButton text="Verify Email" variant="success" isLoading={isLoading} className="px-8 w-full rounded-md " />
                 </div>

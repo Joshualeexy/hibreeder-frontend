@@ -5,71 +5,128 @@ import { Link } from "react-router-dom"
 import paths from "../../Routes/paths"
 import GoogleSocialLogin from "../../components/GoogleSocialLogin"
 import FloatLeft from "../../components/ui/FloatLeft"
+import AppForm from "../../components/ui/AppForm"
+import request from "../../utility/request"
+import { toast } from "react-toastify"
+import { useForm } from "react-hook-form"
 import validate from "../../utility/validator"
-import { useState } from "react"
-import AppForm from "../../components/ui/AppForm";
+import { useNavigate } from "react-router-dom"
+import utility from '../../utility/utility'
+import axios from "axios"
 
-
-type Data = {
-  email: string
-  password: string
+type LoginFormData = {
+    email: string
+    password: string
 }
-  const appName = import.meta.env.VITE_APP_NAME || ""
 
+const appName = import.meta.env.VITE_APP_NAME || ""
 const Login = () => {
-  const [data, setData] = useState<Data>({
-    email: "",
-    password: ""
-  })
+    const {
+        register,
+        handleSubmit,
+        setError,
+        formState: { errors, isSubmitting }
+    } = useForm<LoginFormData>({
+        defaultValues: {
+            email: "",
+            password: ""
+        }
+    })
+    const { getOrigin } = utility()
+    const Navigate = useNavigate()
 
-  const [isLoading, setIsLoading] = useState(false)
+    const onSubmit = async (data: LoginFormData) => {
+        // Track validation errors locally
+        let hasErrors = false
 
-  const [errors, setErrors] = useState<{ [key: string]: string }>({})
+        // Use your custom validator
+        const emailErr = validate(data.email, { type: "email", required: true })
+        if (emailErr) {
+            setError('email', { type: 'manual', message: emailErr })
+            hasErrors = true
+        }
 
-  const handleOnChange = (res: string, field: string): void => {
-    setData((data) => ({ ...data, [field]: res }))
-  }
+        const passwordErr = validate(data.password, { type: 'password', min: 6, required: true })
+        if (passwordErr) {
+            setError('password', { type: 'manual', message: passwordErr })
+            hasErrors = true
+        }
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>): Promise<boolean> => {
-    e.preventDefault()
-    setErrors((prev) => ({ ...prev, email: validate(data.email, { type: "email", required: true }) }))
-    setErrors((prev) => ({ ...prev, password: validate(data.password, { type: 'password', min: 6 }) }))
+        // Stop if validation failed
+        if (hasErrors) {
+            return
+        }
 
-     if (Object.keys(errors).length > 0) {
-      setIsLoading(false);
-      return false
+        try {
+            const baseURL = getOrigin(false);
+
+            await axios.get(`${baseURL}/sanctum/csrf-cookie`)
+            const res = await request('/login', {
+                email: data.email,
+                password: data.password
+            })
+
+            if (res.status === 'success') {
+                console.log(res.payload)
+                Navigate('/feeds')
+                // Handle successful login (e.g., redirect, store token, etc.)
+            } else if (res.status === 'failed') {
+                Object.keys(res.errors).forEach((errKey) => {
+                    const message = res.errors[errKey] ? res.errors[errKey][0] : res.errors[errKey];
+                    setError(errKey as keyof LoginFormData, { message: message })
+                })
+            }
+        } catch (error) {
+            console.error('Login error:', error)
+            toast.error('An unexpected error occurred')
+        }
     }
 
-    
+    return (
+        <Guest title="Login">
+            <AppForm onSubmit={handleSubmit(onSubmit)}>
+                <FloatLeft />
 
-    return true
-  }
+                <h4 className="text-center font-medium text-xl">Login {appName}</h4>
 
-  return (
-    <Guest title="Login">
-      <AppForm onSubmit={(e) => { handleLogin(e) }} >
+                <AppInput
+                    error={errors.email?.message}
+                    register={register('email')}
+                    field="email"
+                    placeholder="Enter Email"
+                    type="email"
+                    label="Email"
+                />
 
-        <FloatLeft />
+                <AppInput
+                    error={errors.password?.message}
+                    register={register('password')}
+                    field="password"
+                    placeholder="Enter Password"
+                    type="password"
+                    label="Password"
+                />
 
-        <h4 className="text-center font-medium text-xl">Login {appName}</h4>
+                <AppButton
+                    text="Login"
+                    isLoading={isSubmitting}
+                    variant="success"
+                    className="px-8 w-full rounded-md"
+                />
 
-        <AppInput error={errors.email} handleOnChange={handleOnChange} field="email" placeholder="Enter Email" type="email" label="Email"
-        />
+                <GoogleSocialLogin />
 
-        <AppInput error={errors.password} handleOnChange={handleOnChange} field="password" placeholder="Enter Password" type="password" label="Password" />
-
-        <AppButton text="Login" isLoading={isLoading} variant="success" className="px-8  w-full rounded-md " />
-
-        <GoogleSocialLogin />
-
-        <div className="flex justify-between items-center w-full">
-          <Link to={paths.forgotPassword} className="text-sm text-gray-600 underline">Forgot password?</Link>
-          <Link to={paths.register} className="text-sm text-gray-600 underline">Create Account</Link>
-        </div>
-      </AppForm>
-
-    </Guest>
-  )
+                <div className="flex justify-between items-center w-full">
+                    <Link to={paths.forgotPassword} className="text-sm text-gray-600 underline">
+                        Forgot password?
+                    </Link>
+                    <Link to={paths.register} className="text-sm text-gray-600 underline">
+                        Create Account
+                    </Link>
+                </div>
+            </AppForm>
+        </Guest>
+    )
 }
 
 export default Login
