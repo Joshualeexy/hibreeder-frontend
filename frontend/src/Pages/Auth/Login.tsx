@@ -52,25 +52,27 @@ const Login = () => {
             hasErrors = true
         }
 
-        // Stop if validation failed
         if (hasErrors) {
             return
         }
 
         try {
             const baseURL = getOrigin(false);
-
             await axios.get(`${baseURL}/sanctum/csrf-cookie`)
+
             const res = await request('/login', {
                 email: data.email,
                 password: data.password
+            }, {
+                sanctumRequest: true
             })
 
             if (res.status === 'success') {
-                console.log(res.payload)
+                console.log(res)
                 Navigate('/feeds')
                 // Handle successful login (e.g., redirect, store token, etc.)
             } else if (res.status === 'failed') {
+                console.log(res)
                 Object.keys(res.errors).forEach((errKey) => {
                     const message = res.errors[errKey] ? res.errors[errKey][0] : res.errors[errKey];
                     setError(errKey as keyof LoginFormData, { message: message })

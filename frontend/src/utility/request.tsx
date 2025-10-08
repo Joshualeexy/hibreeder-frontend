@@ -7,6 +7,7 @@ type Opts = {
     timeout?: number;
     method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
     headers?: Record<string, string>;
+    sanctumRequest?: boolean
 };
 
 type ApiResponse<T = any> =
@@ -27,13 +28,15 @@ function getXsrfToken(): string | null {
 }
 
 export default async function request<T = any>(
+    
     _endpoint: string,
     _data: Data = {},
-    _opts: Opts = {}
+    _opts: Opts = {sanctumRequest:false},
 ): Promise<ApiResponse<T>> {
     const baseURL = getOrigin()
+    const sanctumBaseURL = getOrigin(false)
     _endpoint = normalizeEndpoint(_endpoint);
-    const url = `${baseURL}${_endpoint}`;
+    const url = `${_opts.sanctumRequest ? sanctumBaseURL : baseURL}${_endpoint}`;
     const method = (_opts.method || "POST").toUpperCase();
 
     try {
@@ -50,12 +53,13 @@ export default async function request<T = any>(
                 Accept: "application/json",
                 "X-Requested-With": "XMLHttpRequest",
                 "X-XSRF-TOKEN": getXsrfToken() ?? "",
+                
                 ...(_opts?.headers || {}),
             },
         };
 
         const response =
-            method === "GET"
+            method == "GET"
                 ? await axios.get(url, config)
                 : await axios.request({
                     url,
@@ -63,6 +67,7 @@ export default async function request<T = any>(
                     data: _data,
                     ...config,
                 });
+
 
         return {
             status: "success",
